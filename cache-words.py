@@ -2,7 +2,7 @@ import redis
 
 def get_words_from_dict():
 
-  with open('dictionaries/demo.txt') as word_file:
+  with open('dictionaries/words.txt') as word_file:
     valid_words = set(word_file.read().split())
 
   return valid_words
