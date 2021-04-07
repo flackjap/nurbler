@@ -5,6 +5,9 @@ import string
 
 app = Flask(__name__)
 
+def clean_word(word):
+  return word.translate(str.maketrans('', '', string.punctuation))
+
 @app.route('/')
 def hello_world():
 
@@ -15,12 +18,20 @@ def hello_world():
   if my_text is None:
     return "Please, provide a query param 'my_text'"
 
-  text_list = my_text.split()
+    text_list = my_text.split()
+
+  cleared = []
 
   for i, word in enumerate(text_list):
-    word_ = word.translate(str.maketrans('', '', string.punctuation))
-    hit = r.get(word_)
+    word_ = clean_word(word)
+    cleared.append(word_)
+
+  hits = r.mget(cleared)
+
+  for i, word in enumerate(text_list):
+    word_ = clean_word(word)
+    hit = hits[i]
     if hit is not None:
       text_list[i] = ''.join(['*' for letter in word])
 
-  return ' '.join(text_list)
+  return ' '.join(text_list))
